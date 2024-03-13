@@ -1,0 +1,26 @@
+# how does a makefile work
+
+omelette: beatenEggs salt vegetable
+    put beatenEggs from bowl to pan
+    turn on the stove
+    put vegetable
+    put salt
+
+
+beatenEggs: Eggs
+    Crack Eggs
+    Put the fluid in bowl
+    beat Eggs in a bowl
+
+Eggs:
+    get them from store
+
+salt:
+    get it from store
+
+cheese:
+    get it from store
+
+vegetable:
+    wash
+    slice veges
