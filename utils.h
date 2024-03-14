@@ -5,5 +5,6 @@ int add(struct ENTRY* entries);
 int edit(struct ENTRY* entries);
 int erase(struct ENTRY* entries);
 int display(struct ENTRY* entries);
+void initializeExistingWord();
 
 #endif // !DEBUG

@@ -4,11 +4,15 @@
 // kyrie learned to write a basic library
 #include "menus.h"
 #include "entries.h"
+#include "utils.h"
 
 struct ENTRY entries;
-void initializeExistingWord();
+
 
 int main() {
+
+	initializeExistingWord();
+
 	int languageChoice;
 	int optionChoice;
 	int exitChoice = 7;
