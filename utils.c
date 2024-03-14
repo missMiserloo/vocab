@@ -2,19 +2,21 @@
 #include <string.h>
 #include "entries.h"
 
-static int[] existingWord;
+int existingWord[ARRAY_SIZE];
 
+void initializeExistingWord() {
 for (int i = 0; i < ARRAY_SIZE; i++)
 	existingWord[i] = -1;
+}
 
-int wordSearch(struct ENTTRY* entries, char wordFind) {
+int wordSearch(struct ENTRY* entries, char* wordFind) {
 	int count = -1;
 	for (int i = 0; i < ARRAY_SIZE; i++) {
-		if (existingWord[i] == 1)
-			if (strcmp(entries[i].word, wordFind) == 0) {
+		if (existingWord[i] == 1 && strcmp(entries[i].word, wordFind) == 0) {
 				count = i;
 				break;
 			}
+		}
 		return count;
 	}
 

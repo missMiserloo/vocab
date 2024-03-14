@@ -6,12 +6,12 @@
 #include "entries.h"
 
 struct ENTRY entries;
+void initializeExistingWord();
 
 int main() {
 	int languageChoice;
 	int optionChoice;
 	int exitChoice = 7;
-
 
 	do {
 		languageMenu();
