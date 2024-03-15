@@ -5,11 +5,16 @@
 #include "menus.h"
 #include "entries.h"
 #include "utils.h"
+#include "file_writer.h"
 
-struct ENTRY entries;
-
+struct ENTRY entries[ARRAY_SIZE];
+int numEntries = ARRAY_SIZE;
 
 int main() {
+	const char* filename = "entries.txt";
+    writeFile(filename, &entries[0], numEntries);
+
+    return 0;
 
 	initializeExistingWord();
 
