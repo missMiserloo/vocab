@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "entries.h"
-#include "file_writer.h"
+#include "input.h"
 
 static int existingWord[ARRAY_SIZE];
 
@@ -47,7 +47,7 @@ int add(struct ENTRY* entries, int* numEntries) {
 	clearBuf();
 
 	char new_word[LENGTH_SIZE];
-	fgets(new_word, sizeof(new_word), stdin);
+	my_gets(new_word, sizeof(new_word));
 	// printf("%s", new_word);
 
 	int pos = wordSearch(entries, new_word);
@@ -67,17 +67,17 @@ int add(struct ENTRY* entries, int* numEntries) {
 	if (strcmp(entries[pos].parts_of_speech, "verb") == 0) {
 		printf("tense: ");
 		clearBuf();
-		fgets(entries[pos].tense, sizeof(entries[0].tense), stdin);
+		my_gets(entries[pos].tense, sizeof(entries[0].tense));
 	}
 	else clearBuf();
 	printf("definition: ");
-	fgets(entries[pos].definition, sizeof(entries[0].definition), stdin);
+	my_gets(entries[pos].definition, sizeof(entries[0].definition));
 	strcpy(entries[pos].word, new_word);
 
 	existingWord[pos] = 1;
 
 	printf("%s added", new_word);
-	writeFile("entries.txt", entries, *numEntries);
+	//writeFile("entries.txt", entries, *numEntries);
 	return 0;
 }
 
@@ -92,7 +92,7 @@ int edit(struct ENTRY* entries, int numEntries) {
 	int pos = wordSearch(entries, editRef);
 
 	printf("word to edit: ");
-    fgets(editRef, sizeof(editRef), stdin);
+    my_gets(editRef, sizeof(editRef));
 
 	if(pos != -1) {
 		printf("Editing entry for %s\n", editRef);
@@ -107,7 +107,7 @@ int edit(struct ENTRY* entries, int numEntries) {
 	if (choice == 1) {
 		printf("Enter new word: \n");
 		clearBuf();
-		fgets(newWord, sizeof(newWord), stdin);
+		my_gets(newWord, sizeof(newWord));
 		//strcpy(entries[0].word, newWord);
 		printf("Word is changed from %s to %s", entries[pos].word, newWord);
 		strcpy(entries[pos].word, newWord);
@@ -116,7 +116,7 @@ int edit(struct ENTRY* entries, int numEntries) {
 	if (choice == 2) {
         printf("Enter new part of speech: \n");                          
 		clearBuf();                                                                   
-		fgets(newSpeech, sizeof(newSpeech), stdin);                                   
+		my_gets(newSpeech, sizeof(newSpeech));                                   
 		//strcpy(entries[0].word, newWord);                                           
 		printf("Part of speech is changed from %s to %s", entries[pos].parts_of_speech, newSpeech);
         strcpy(entries[pos].parts_of_speech, newSpeech);
@@ -125,7 +125,7 @@ int edit(struct ENTRY* entries, int numEntries) {
 	  if (choice == 3) {
           printf("Enter new tense: \n");                                                    
 		  clearBuf();                                                                      
-		  fgets(newTense, sizeof(newTense), stdin);
+		  my_gets(newTense, sizeof(newTense));
 		  //strcpy(entries[0].word, newWord); 
 		  printf("Tense is changed from %s to %s", entries[pos].tense, newTense);
           strcpy(entries[pos].tense, newTense);
@@ -134,13 +134,13 @@ int edit(struct ENTRY* entries, int numEntries) {
 	  if (choice == 4) {
           printf("Enter new definition: \n");                                               
 		  clearBuf();                                                                      
-		  fgets(newDef, sizeof(newDef), stdin);                                          
+		  my_gets(newDef, sizeof(newDef));                                          
 		  //strcpy(entries[0].word, newWord);                                              
 		  printf("Word is changed from %s to %s", entries[pos].definition, newDef);
           strcpy(entries[pos].definition, newDef);
 		  printf("Entry updated successfully!\n");
       }
-	  writeFile("entries.txt", entries, numEntries);
+	  //writeFile("entries.txt", entries, numEntries);
 	  return 0;
 	}
 	else {
@@ -153,14 +153,14 @@ int erase(struct ENTRY* entries, int numEntries) {
 	char wordToDelete[LENGTH_SIZE];
 	int pos = wordSearch(entries, wordToDelete);
 	printf("Word to delete: ");
-	fgets(wordToDelete, sizeof(wordToDelete), stdin);
+	my_gets(wordToDelete, sizeof(wordToDelete));
 	clearBuf();
 	if(pos != -1) {
 		existingWord[pos] = -1;
 		memset(&entries[pos], 0, sizeof(struct ENTRY));
 		printf("Entry deleted successfully!");
 		return 0;
-		writeFile("entries.txt", entries, numEntries);
+		//writeFile("entries.txt", entries, numEntries);
 	}
 	return 1;
 }
@@ -179,18 +179,58 @@ void bubbleSort(struct ENTRY* entries, int* numEntries) {
 
 }
 
-int display(struct ENTRY* entries, int numEntries) {
-	bubbleSort(entries, &numEntries); // Sort the entries before displaying
+int display(struct ENTRY* entries) {
+	//bubbleSort(entries, &numEntries); // Sort the entries before displaying
     
     printf("+-------------------------+\n");
     printf("| %-20s | %-20s | %-20s | %-20s |\n", "Word", "Parts of Speech", "Tense", "Definition");
     printf("+-------------------------+\n");
     
-    for (int i = 0; i < numEntries; i++) {
-        printf("| %-20s | %-20s | %-20s | %-20s |\n", entries[i].word, entries[i].parts_of_speech, entries[i].tense, entries[i].definition);
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+		if(existingWord[i]!=-1)
+        	printf("| %-20s | %-20s | %-20s | %-20s |\n", entries[i].word, entries[i].parts_of_speech, entries[i].tense, entries[i].definition);
     }
     
     printf("+-------------------------+\n");
 	return 0;
-	writeFile("entries.txt", entries, numEntries);
+	//writeFile("entries.txt", entries, numEntries);
+}
+
+void writeFile(const char* filename, struct ENTRY* entries) {
+    FILE* file = fopen(filename, "w");
+    if (file) {
+        for (int i = 0; i < ARRAY_SIZE; i++) {
+			if(existingWord[i]!=-1){
+            	fprintf(file, "EWord: %s\n", entries[i].word);
+            	fprintf(file, "Parts of Speech: %s\n", entries[i].parts_of_speech);
+            	fprintf(file, "Tense: %s\n", entries[i].tense);
+            	fprintf(file, "Definition: %s\n", entries[i].definition);
+            	fprintf(file, "+-------------------------+\n");
+			}
+        }
+        fclose(file);
+    } else {
+        printf("Error opening file for writing.\n");
+    }
+}
+
+void readFile(const char* filename, struct ENTRY* entries) {
+    FILE* file = fopen(filename, "r");
+	if(file==NULL) {
+		printf("File not fount, write will create a new one at the end\n");
+		return;
+	}
+	int i=0;
+	char c;
+    while((c=fgetc(file))!=EOF){
+        fscanf(file, "Word: %s\n", entries[i].word);
+        fscanf(file, "Parts of Speech: %s\n", entries[i].parts_of_speech);
+        fscanf(file, "Tense: %s\n", entries[i].tense);
+        fscanf(file, "Definition: %s\n", entries[i].definition);
+        fscanf(file, "+-------------------------+\n");
+		existingWord[i] = 1;
+		printf("I am here %d\n", i);
+		i++;
+    }
+    fclose(file);
 }

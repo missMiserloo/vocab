@@ -1,23 +1,14 @@
-vocab: menus.o vocab.o utils.o file_writer.o
-	gcc -o vocab menus.o vocab.o utils.o file_writer.o
+OBJECTS=menus.o vocab.o utils.o input.o
+CFLAGS=-g
 
-menus.o: menus.c
-	gcc -c menus.c
+vocab: $(OBJECTS)
+	gcc $(CFLAGS) -o vocab $(OBJECTS)
 
-vocab.o: vocab.c
-	gcc -c vocab.c
-
-utils.o: utils.c
-	gcc -c utils.c
-
-file_writer.o: file_writer.c
-	gcc -c file_writer.c
+%.o: %.c
+	gcc $(CFLAGS) -c $<
 
 .PHONY: clean
 
 clean:
-	rm menus.o
-	rm vocab.o
-	rm utils.o
-	rm file_writer.o
+	rm *.o
 	rm vocab

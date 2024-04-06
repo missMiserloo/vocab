@@ -7,4 +7,7 @@ int erase(struct ENTRY* entries);
 int display(struct ENTRY* entries);
 void initializeExistingWord();
 
+void writeFile(const char* filename, struct ENTRY* entries);
+void readFile(const char* filename, struct ENTRY* entries);
+
 #endif // !DEBUG

@@ -36,9 +36,11 @@ void optionChooser(int optionChoice) {
             break;
 		case 3:
             printf("delete selected\n");
+			erase(&entries);
             break;
 		case 4:
             printf("display selected\n");
+			display(&entries);
             break;
 		case 5:
             printf("Going back to language menu\n");

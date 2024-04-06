@@ -5,18 +5,21 @@
 #include "menus.h"
 #include "entries.h"
 #include "utils.h"
-#include "file_writer.h"
 
 struct ENTRY entries[ARRAY_SIZE];
 int numEntries = ARRAY_SIZE;
 
 int main() {
 	const char* filename = "entries.txt";
-    writeFile(filename, &entries[0], numEntries);
-
-    return 0;
+	
+	// artificial seg fault
+	int *segfault;
+	segfault = (int*)malloc(sizeof(int));
+	*segfault = 0;
 
 	initializeExistingWord();
+	readFile(filename, entries);
+
 
 	int languageChoice;
 	int optionChoice;
@@ -29,6 +32,7 @@ int main() {
 		if (languageChoice < 1 || languageChoice > exitChoice) {
 		printf("Invalid choice. Please retry.\n");
 		} else if (languageChoice == exitChoice) {
+			writeFile(filename, entries);
             printf("Exiting the program.\n");
             exit(0);
         } else {
