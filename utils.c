@@ -90,10 +90,11 @@ int edit(struct ENTRY* entries, int numEntries) {
 	char newDef[LENGTH_SIZE];
 
 	char editRef[LENGTH_SIZE];
-	int pos = wordSearch(entries, editRef);
 
 	printf("word to edit: ");
+	clearBuf();
     my_gets(editRef, sizeof(editRef));
+	int pos = wordSearch(entries, editRef);
 
 	if(pos != -1) {
 		printf("Editing entry for %s\n", editRef);
@@ -182,7 +183,7 @@ void bubbleSort(struct ENTRY* entries, int* numEntries) {
 
 int display(struct ENTRY* entries) {
 	//bubbleSort(entries, &numEntries); // Sort the entries before displaying
-    
+	
     printf("+-------------------------+\n");
     printf("| %-20s | %-20s | %-20s | %-20s |\n", "Word", "Parts of Speech", "Tense", "Definition");
     printf("+-------------------------+\n");
@@ -202,7 +203,7 @@ void writeFile(const char* filename, struct ENTRY* entries) {
     if (file) {
         for (int i = 0; i < ARRAY_SIZE; i++) {
 			if(existingWord[i]!=-1){
-            	fprintf(file, "EWord: %s\n", entries[i].word);
+            	fprintf(file, "Word: %s\n", entries[i].word);
             	fprintf(file, "Parts of Speech: %s\n", entries[i].parts_of_speech);
             	fprintf(file, "Tense: %s\n", entries[i].tense);
             	fprintf(file, "Definition: %s\n", entries[i].definition);
@@ -222,16 +223,64 @@ void readFile(const char* filename, struct ENTRY* entries) {
 		return;
 	}
 	int i=0;
+	int j;
 	char c;
-    while((c=fgetc(file))!=EOF){
-        fscanf(file, "Word: %s\n", entries[i].word);
-        fscanf(file, "Parts of Speech: %s\n", entries[i].parts_of_speech);
-        fscanf(file, "Tense: %s\n", entries[i].tense);
-        fscanf(file, "Definition: %s\n", entries[i].definition);
-        fscanf(file, "+-------------------------+\n");
+	// scan word
+	do {
+		while((c=fgetc(file))!=':' && c!=(char)EOF)
+			continue;
+
+		if(c==(char)EOF)
+			break;
+
+		fgetc(file);
+		
+		j = 0;
+		while((c=fgetc(file))!='\n'){
+			entries[i].word[j] = c;
+			j++;
+		}
+		entries[i].word[j] = '\0';
+
+		// scan parts of speech
+		while((c=fgetc(file))!=':')
+    	    continue;
+		fgetc(file);
+		j = 0;
+		while((c=fgetc(file))!='\n'){
+			entries[i].parts_of_speech[j] = c;
+			j++;
+		}
+		entries[i].parts_of_speech[j] = '\0';
+
+		// scan tense
+		while((c=fgetc(file))!=':')
+    	    continue;
+		fgetc(file);
+		j = 0;
+		while((c=fgetc(file))!='\n'){
+			entries[i].tense[j] = c;
+			j++;
+		}
+		entries[i].tense[j] = '\0';
+
+		// scan definition
+		while((c=fgetc(file))!=':')
+    	    continue;
+		fgetc(file);
+		j = 0;
+		while((c=fgetc(file))!='\n'){
+			entries[i].definition[j] = c;
+			j++;
+		}
+		entries[i].definition[j] = '\0';
 		existingWord[i] = 1;
-		printf("I am here %d\n", i);
 		i++;
-    }
+
+		// scan +----------------+ 
+		while((c=fgetc(file))!='\n')
+			continue;
+	} while (1);
+	
     fclose(file);
 }
