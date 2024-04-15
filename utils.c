@@ -226,10 +226,10 @@ void readFile(const char* filename, struct ENTRY* entries) {
 	char c;
 	// scan word
 	do {
-		while((c=fgetc(file))!=':' && c!=EOF)
+		while((c=fgetc(file))!=':' && c!=(char)EOF)
 			continue;
 
-		if(c==EOF)
+		if(c==(char)EOF)
 			break;
 
 		fgetc(file);
