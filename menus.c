@@ -24,11 +24,11 @@ void languageMenu() {
 	printf(" 7. Exit\n");
 }
 
-void optionChooser(int optionChoice) {
+void optionChooser(int optionChoice, int languageChoice) {
 	switch(optionChoice) {
 		case 1:
 			printf("add selected\n");
-			add(&entries);
+			add(&entries, languageChoice);
 			break;
 		case 2:
             printf("edit selected\n");

@@ -42,7 +42,7 @@ int emptySpotFinder(int existingWord[]) {
 } 
 
 
-int add(struct ENTRY* entries, int* numEntries) {
+int add(struct ENTRY* entries, int languageChoice) {
 	printf("word: ");
 	clearBuf();
 
@@ -73,7 +73,8 @@ int add(struct ENTRY* entries, int* numEntries) {
 	printf("definition: ");
 	my_gets(entries[pos].definition, sizeof(entries[0].definition));
 	strcpy(entries[pos].word, new_word);
-
+	
+	entries[pos].language = languageChoice;
 	existingWord[pos] = 1;
 
 	printf("%s added", new_word);

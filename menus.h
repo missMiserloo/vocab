@@ -3,6 +3,6 @@
 
 void optionMenu();
 void languageMenu();
-void optionChooser(int optionChoice);
+void optionChooser(int optionChoice, int languageChoice);
 
 #endif

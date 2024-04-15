@@ -42,7 +42,7 @@ int main() {
 				optionMenu();
 				printf("Option: ");
 				scanf("%d", &optionChoice);
-				optionChooser(optionChoice);
+				optionChooser(optionChoice, languageChoice);
 			} while (optionChoice > 5);
 		}
 	} while (1);
