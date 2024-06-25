@@ -183,22 +183,24 @@ void bubbleSort(struct ENTRY* entries, int* numEntries) {
 
 int display(struct ENTRY* entries) {
 	//bubbleSort(entries, &numEntries); // Sort the entries before displaying
-	
+
     printf("+-------------------------+\n");
-    printf("| %-20s | %-20s | %-20s | %-20s |\n", "Word", "Parts of Speech", "Tense", "Definition");
+    printf("| %-20s | %-20s | %-20s | %-20s | %d |\n", "Word", "Parts of Speech", "Tense", "Definition", "Language");
     printf("+-------------------------+\n");
     
     for (int i = 0; i < ARRAY_SIZE; i++) {
 		if(existingWord[i]!=-1)
-        	printf("| %-20s | %-20s | %-20s | %-20s |\n", entries[i].word, entries[i].parts_of_speech, entries[i].tense, entries[i].definition);
-    }
+		if(entries[i].language >= 0) {
+        	printf("| %-20s | %-20s | %-20s | %-20s | %d |\n", entries[i].word, entries[i].parts_of_speech, entries[i].tense, entries[i].definition, entries[i].language);
+    	}
+	}
     
     printf("+-------------------------+\n");
 	return 0;
 	//writeFile("entries.txt", entries, numEntries);
 }
 
-void writeFile(const char* filename, struct ENTRY* entries) {
+void writeFile(const char* filename, struct ENTRY* entries, int language) {
     FILE* file = fopen(filename, "w");
     if (file) {
         for (int i = 0; i < ARRAY_SIZE; i++) {
@@ -207,6 +209,7 @@ void writeFile(const char* filename, struct ENTRY* entries) {
             	fprintf(file, "Parts of Speech: %s\n", entries[i].parts_of_speech);
             	fprintf(file, "Tense: %s\n", entries[i].tense);
             	fprintf(file, "Definition: %s\n", entries[i].definition);
+				fprintf(file, "Language: %d\n", entries[i].language);
             	fprintf(file, "+-------------------------+\n");
 			}
         }
@@ -274,6 +277,14 @@ void readFile(const char* filename, struct ENTRY* entries) {
 			j++;
 		}
 		entries[i].definition[j] = '\0';
+
+		// scan language
+		while((c=fgetc(file))!=':')
+    	    continue;
+		fgetc(file);
+		while(fscanf(file, "%d", &entries[i].language)){
+			fscanf(file, "%d", &entries[i].language);
+		}
 		existingWord[i] = 1;
 		i++;
 
