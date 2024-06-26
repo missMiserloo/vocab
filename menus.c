@@ -32,15 +32,15 @@ void optionChooser(int optionChoice, int languageChoice) {
 			break;
 		case 2:
             printf("edit selected\n");
-			edit(&entries);
+			edit(&entries, languageChoice);
             break;
 		case 3:
             printf("delete selected\n");
-			erase(&entries);
+			erase(&entries, languageChoice);
             break;
 		case 4:
             printf("display selected\n");
-			display(&entries);
+			display(&entries, languageChoice);
             break;
 		case 5:
             printf("Going back to language menu\n");

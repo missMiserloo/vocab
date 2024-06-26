@@ -24,6 +24,8 @@ int main() {
 	int languageChoice;
 	int optionChoice;
 	int exitChoice = 7;
+	int display(struct ENTRY* entries, int languageChoice);
+
 
 	do {
 		languageMenu();

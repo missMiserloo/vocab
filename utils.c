@@ -81,96 +81,105 @@ int add(struct ENTRY* entries, int languageChoice) {
 	//writeFile("entries.txt", entries, *numEntries);
 	return 0;
 }
-
-int edit(struct ENTRY* entries, int numEntries) {
+int edit(struct ENTRY* entries, int languageChoice) {
 	int choice;
 	char newWord[LENGTH_SIZE];
 	char newSpeech[LENGTH_SIZE];
 	char newTense[LENGTH_SIZE];
 	char newDef[LENGTH_SIZE];
-
 	char editRef[LENGTH_SIZE];
 
-	printf("word to edit: ");
-	clearBuf();
-    my_gets(editRef, sizeof(editRef));
-	int pos = wordSearch(entries, editRef);
-
-	if(pos != -1) {
-		printf("Editing entry for %s\n", editRef);
-		printf("\nwhat to edit: \n");
-		printf(" 1. Word\n");
-		printf(" 2. Parts of speech\n");
-		printf(" 3. Tense\n");
-		printf(" 4. Definition\n");
-		printf("choice: ");
-		scanf("%d", &choice);
-
-	if (choice == 1) {
-		printf("Enter new word: \n");
+	int pos;
+	for (int i = 0; i < ARRAY_SIZE; i++) {
+		if(entries[i].language != languageChoice) {
+			continue;
+		}
+		printf("word to edit: ");
 		clearBuf();
-		my_gets(newWord, sizeof(newWord));
-		//strcpy(entries[0].word, newWord);
-		printf("Word is changed from %s to %s", entries[pos].word, newWord);
-		strcpy(entries[pos].word, newWord);
-		printf("Entry updated successfully!\n");
-	} 
-	if (choice == 2) {
-        printf("Enter new part of speech: \n");                          
-		clearBuf();                                                                   
-		my_gets(newSpeech, sizeof(newSpeech));                                   
-		//strcpy(entries[0].word, newWord);                                           
-		printf("Part of speech is changed from %s to %s", entries[pos].parts_of_speech, newSpeech);
-        strcpy(entries[pos].parts_of_speech, newSpeech);
-		printf("Entry updated successfully!\n");
-      } 
-	  if (choice == 3) {
-          printf("Enter new tense: \n");                                                    
-		  clearBuf();                                                                      
-		  my_gets(newTense, sizeof(newTense));
-		  //strcpy(entries[0].word, newWord); 
-		  printf("Tense is changed from %s to %s", entries[pos].tense, newTense);
-          strcpy(entries[pos].tense, newTense);
-		  printf("Entry updated successfully!\n");
-      } 
-	  if (choice == 4) {
-          printf("Enter new definition: \n");                                               
-		  clearBuf();                                                                      
-		  my_gets(newDef, sizeof(newDef));                                          
-		  //strcpy(entries[0].word, newWord);                                              
-		  printf("Word is changed from %s to %s", entries[pos].definition, newDef);
-          strcpy(entries[pos].definition, newDef);
-		  printf("Entry updated successfully!\n");
-      }
-	  //writeFile("entries.txt", entries, numEntries);
-	  return 0;
+		my_gets(editRef, sizeof(editRef));
+		pos = wordSearch(entries, editRef);
+
+		if(pos != -1) {
+			printf("Editing entry for %s\n", editRef);
+			printf("\nwhat to edit: \n");
+			printf(" 1. Word\n");
+			printf(" 2. Parts of speech\n");
+			printf(" 3. Tense\n");
+			printf(" 4. Definition\n");
+			printf("choice: ");
+			scanf("%d", &choice);
+
+		if (choice == 1) {
+			printf("Enter new word: \n");
+			clearBuf();
+			my_gets(newWord, sizeof(newWord));
+			//strcpy(entries[0].word, newWord);
+			printf("Word is changed from %s to %s", entries[pos].word, newWord);
+			strcpy(entries[pos].word, newWord);
+			printf("Entry updated successfully!\n");
+		} 
+		if (choice == 2) {
+			printf("Enter new part of speech: \n");                          
+			clearBuf();                                                                   
+			my_gets(newSpeech, sizeof(newSpeech));                                   
+			//strcpy(entries[0].word, newWord);                                           
+			printf("Part of speech is changed from %s to %s", entries[pos].parts_of_speech, newSpeech);
+			strcpy(entries[pos].parts_of_speech, newSpeech);
+			printf("Entry updated successfully!\n");
+		} 
+		if (choice == 3) {
+			printf("Enter new tense: \n");                                                    
+			clearBuf();                                                                      
+			my_gets(newTense, sizeof(newTense));
+			//strcpy(entries[0].word, newWord); 
+			printf("Tense is changed from %s to %s", entries[pos].tense, newTense);
+			strcpy(entries[pos].tense, newTense);
+			printf("Entry updated successfully!\n");
+		} 
+		if (choice == 4) {
+			printf("Enter new definition: \n");                                               
+			clearBuf();                                                                      
+			my_gets(newDef, sizeof(newDef));                                          
+			//strcpy(entries[0].word, newWord);                                              
+			printf("Word is changed from %s to %s", entries[pos].definition, newDef);
+			strcpy(entries[pos].definition, newDef);
+			printf("Entry updated successfully!\n");
+		}
+		//writeFile("entries.txt", entries, numEntries);
+		return 0;
+		}
+		else {
+			printf("Entry for %s is not found!", editRef);
+			return 1;
+		}
+	
 	}
-	else {
-		printf("Entry for %s is not found!", editRef);
+}
+
+	int erase(struct ENTRY* entries, int languageChoice) {
+	for (int i = 0; i < ARRAY_SIZE; i++) {
+		if (entries[i].language == languageChoice)
+		printf("word to edit: ");
+		char wordToDelete[LENGTH_SIZE];
+		int pos = wordSearch(entries, wordToDelete);
+		printf("Word to delete: ");
+		my_gets(wordToDelete, sizeof(wordToDelete));
+		clearBuf();
+		if(pos != -1) {
+			existingWord[pos] = -1;
+			memset(&entries[pos], 0, sizeof(struct ENTRY));
+			printf("Entry deleted successfully!");
+			return 0;
+			//writeFile("entries.txt", entries, numEntries);
+		}
 		return 1;
 	}
 }
 
-int erase(struct ENTRY* entries, int numEntries) {
-	char wordToDelete[LENGTH_SIZE];
-	int pos = wordSearch(entries, wordToDelete);
-	printf("Word to delete: ");
-	my_gets(wordToDelete, sizeof(wordToDelete));
-	clearBuf();
-	if(pos != -1) {
-		existingWord[pos] = -1;
-		memset(&entries[pos], 0, sizeof(struct ENTRY));
-		printf("Entry deleted successfully!");
-		return 0;
-		//writeFile("entries.txt", entries, numEntries);
-	}
-	return 1;
-}
-
-void bubbleSort(struct ENTRY* entries, int* numEntries) {
+void bubbleSort(struct ENTRY* entries) {
 	int i, j;
-	for (int i = 0; i < *numEntries; i++) {
-		for (int j = 0; j < *numEntries; j++) {
+	for (int i = 0; i < ARRAY_SIZE; i++) {
+		for (int j = 0; j < ARRAY_SIZE; j++) {
 			if(strcmp(entries[j].word, entries[j+1].word) > 0) {
 				struct ENTRY temp = entries[j];
 				entries[j] = entries[j+1];
@@ -181,19 +190,19 @@ void bubbleSort(struct ENTRY* entries, int* numEntries) {
 
 }
 
-int display(struct ENTRY* entries) {
+int display(struct ENTRY* entries, int languageChoice) {
 	//bubbleSort(entries, &numEntries); // Sort the entries before displaying
 
     printf("+-------------------------+\n");
-    printf("| %-20s | %-20s | %-20s | %-20s | %d |\n", "Word", "Parts of Speech", "Tense", "Definition", "Language");
+    printf("| %-20s | %-20s | %-20s | %-20s | %-20s |\n", "Word", "Parts of Speech", "Tense", "Definition", "Language");
     printf("+-------------------------+\n");
     
-    for (int i = 0; i < ARRAY_SIZE; i++) {
-		if(existingWord[i]!=-1)
-		if(entries[i].language >= 0) {
-        	printf("| %-20s | %-20s | %-20s | %-20s | %d |\n", entries[i].word, entries[i].parts_of_speech, entries[i].tense, entries[i].definition, entries[i].language);
-    	}
-	}
+		for (int i = 0; i < ARRAY_SIZE; i++) {
+			if(entries[i].language == languageChoice) {
+			if(existingWord[i]!=-1)
+        		printf("| %-20s | %-20s | %-20s | %-20s | %-20d |\n", entries[i].word, entries[i].parts_of_speech, entries[i].tense, entries[i].definition, entries[i].language);
+			}
+		}
     
     printf("+-------------------------+\n");
 	return 0;
