@@ -90,24 +90,31 @@ int edit(struct ENTRY* entries, int languageChoice) {
 	char editRef[LENGTH_SIZE];
 
 	int pos;
-	for (int i = 0; i < ARRAY_SIZE; i++) {
-		if(entries[i].language != languageChoice) {
-			continue;
-		}
-		printf("word to edit: ");
-		clearBuf();
-		my_gets(editRef, sizeof(editRef));
-		pos = wordSearch(entries, editRef);
+	int word_found = 0;
+	
+	printf("word to edit: ");
+	
+	clearBuf();
+	my_gets(editRef, sizeof(editRef));
+	
+	pos = wordSearch(entries, editRef);
+	
+	if(entries[pos].language != languageChoice) {
+		printf("Entry for %s is not found!", editRef);
+		return 1;
+	}
 
-		if(pos != -1) {
-			printf("Editing entry for %s\n", editRef);
-			printf("\nwhat to edit: \n");
-			printf(" 1. Word\n");
-			printf(" 2. Parts of speech\n");
-			printf(" 3. Tense\n");
-			printf(" 4. Definition\n");
-			printf("choice: ");
-			scanf("%d", &choice);
+	if(pos != -1) {
+		// we found the word with correct language
+		word_found = 1;
+		printf("Editing entry for %s\n", editRef);
+		printf("\nwhat to edit: \n");
+		printf(" 1. Word\n");
+		printf(" 2. Parts of speech\n");
+		printf(" 3. Tense\n");
+		printf(" 4. Definition\n");
+		printf("choice: ");
+		scanf("%d", &choice);
 
 		if (choice == 1) {
 			printf("Enter new word: \n");
@@ -145,26 +152,26 @@ int edit(struct ENTRY* entries, int languageChoice) {
 			strcpy(entries[pos].definition, newDef);
 			printf("Entry updated successfully!\n");
 		}
-		//writeFile("entries.txt", entries, numEntries);
-		return 0;
+		// word written, return
+			return 0;
 		}
-		else {
-			printf("Entry for %s is not found!", editRef);
-			return 1;
-		}
-	
+	else {
+		printf("Entry for %s is not found!", editRef);
+		return 1;
 	}
 }
 
 	int erase(struct ENTRY* entries, int languageChoice) {
-	for (int i = 0; i < ARRAY_SIZE; i++) {
-		if (entries[i].language == languageChoice)
-		printf("word to edit: ");
 		char wordToDelete[LENGTH_SIZE];
-		int pos = wordSearch(entries, wordToDelete);
 		printf("Word to delete: ");
-		my_gets(wordToDelete, sizeof(wordToDelete));
 		clearBuf();
+		my_gets(wordToDelete, sizeof(wordToDelete));
+		int pos = wordSearch(entries, wordToDelete);
+		if (entries[pos].language != languageChoice) {
+			printf("word does not exist in this language!");
+			return 1;
+		}
+		
 		if(pos != -1) {
 			existingWord[pos] = -1;
 			memset(&entries[pos], 0, sizeof(struct ENTRY));
@@ -174,7 +181,6 @@ int edit(struct ENTRY* entries, int languageChoice) {
 		}
 		return 1;
 	}
-}
 
 void bubbleSort(struct ENTRY* entries) {
 	int i, j;
